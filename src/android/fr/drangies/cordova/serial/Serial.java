@@ -33,7 +33,7 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.util.Base64;
 import android.util.Log;
-
+import android.os.Build;
 
 /**
  * Cordova plugin to communicate with the android serial port
@@ -208,7 +208,16 @@ public class Serial extends CordovaPlugin {
                     driver = availableDrivers.get(0);
                     UsbDevice device = driver.getDevice();
                     // create the intent that will be used to get the permission
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION), 0);
+                    //origional broken code: PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION), 0);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        // For Android 12 (API 31) and above
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION),PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE
+                    } else {
+                        // For Android 11 (API 30) and below
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION), 0);
+                    }
+
+
                     // and a filter on the permission we ask
                     IntentFilter filter = new IntentFilter();
                     filter.addAction(UsbBroadcastReceiver.USB_PERMISSION);
