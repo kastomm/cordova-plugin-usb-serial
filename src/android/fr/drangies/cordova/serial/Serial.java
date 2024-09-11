@@ -209,13 +209,15 @@ public class Serial extends CordovaPlugin {
                     UsbDevice device = driver.getDevice();
                     // create the intent that will be used to get the permission
                     //origional broken code: PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION), 0);
+                    PendingIntent pendingIntent;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         // For Android 12 (API 31) and above
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION),PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE
+                        pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION),PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
                     } else {
                         // For Android 11 (API 30) and below
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION), 0);
+                        pendingIntent = PendingIntent.getBroadcast(cordova.getActivity(), 0, new Intent(UsbBroadcastReceiver.USB_PERMISSION), 0);
                     }
+
 
 
                     // and a filter on the permission we ask
